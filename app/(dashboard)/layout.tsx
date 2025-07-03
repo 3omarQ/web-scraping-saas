@@ -1,3 +1,4 @@
+import BreadcrumbHeader from '@/components/BreadcrumbHeader'
 import SidebarDesktop from '@/components/SidebarDesktop'
 import { Separator } from '@/components/ui/separator'
 import { Sidebar } from '@/components/ui/sidebar'
@@ -8,7 +9,9 @@ function layout({children}:{children:React.ReactNode}) {
     <div className='flex h-screen'>
         <SidebarDesktop />
         <div className='flex flex-col flex-1 min-h-screen'>
-            <header className='flex items-center justify-between px-6 py-4 h-[50px] container'>Xpresflow</header>
+            <header className='flex items-center justify-between px-6 py-4 h-[50px] container'>
+              <BreadcrumbHeader/>
+            </header>
             <Separator/>
             <div className='overflow-auto'>
                 <div className='flex-1 container py-4 text-accent-foreground'>
