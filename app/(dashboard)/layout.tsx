@@ -1,4 +1,5 @@
 import BreadcrumbHeader from '@/components/BreadcrumbHeader'
+import { AppProviders } from '@/components/providers/AppProvider'
 import SidebarDesktop from '@/components/SidebarDesktop'
 import { Separator } from '@/components/ui/separator'
 import { Sidebar } from '@/components/ui/sidebar'
@@ -7,7 +8,9 @@ import React from 'react'
 
 function layout({children}:{children:React.ReactNode}) {
   return (
-    <div className="flex h-screen">
+  <AppProviders>
+
+        <div className="flex h-screen">
       <SidebarDesktop />
       <div className="flex flex-col flex-1 min-h-screen">
         <header className="flex items-center justify-between px-6 py-4 h-[50px] container">
@@ -26,6 +29,7 @@ function layout({children}:{children:React.ReactNode}) {
         </div>
       </div>
     </div>
+  </AppProviders>
   );
 }
 
