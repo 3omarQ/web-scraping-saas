@@ -8,7 +8,6 @@ import { FileTextIcon, PlayIcon } from 'lucide-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import DeleteConfirmation from './DeleteConfirmation'
-import { shouldThrowError } from '@tanstack/react-query'
 
 function WorkflowCard({workflow}:{workflow:Workflow}) {
     const isDraft = workflow.status == WorkflowStatus.DRAFT
@@ -22,14 +21,14 @@ function WorkflowCard({workflow}:{workflow:Workflow}) {
                     {isDraft ? (<FileTextIcon className="h-5 w-5" />) : (<PlayIcon className="h-5 w-5 text-white"/>) } 
                 </div>
                 <div>
-                    <Link href={`/workflows/editor/${workflow.id}`}>
+                    <Link href={`/workflow/editor/${workflow.id}`}>
                         <span className="text-md font-semibold">{workflow.name}</span>
                     </Link>
                     {isDraft && <span className="text-xs text-slate-400 ml-2">(draft)</span>}
                 </div>
                 <div className='flex ml-auto gap-4'>
                     
-                        <Link href={`/workflows/editor/${workflow.id}`}>
+                        <Link href={`/workflow/editor/${workflow.id}`}>
                             <Button variant="outline" size="sm">
                             Edit
                             </Button>

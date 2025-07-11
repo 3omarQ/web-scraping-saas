@@ -7,6 +7,10 @@ import {z } from "zod";
 import { error } from "console";
 import { WorkflowStatus } from "@/types/workflow";
 import { redirect } from "next/navigation";
+import { AppNode } from "@/types/appNode";
+import { Edge } from "@xyflow/react";
+import { createFlowNode } from "@/lib/workflow/createFlowNode";
+import { TaskType } from "@/types/task";
 
 export async function CreateWorkflow(form:createWorkflowSchemaType){
     const {userId} = auth();
@@ -19,11 +23,21 @@ export async function CreateWorkflow(form:createWorkflowSchemaType){
         throw new Error("invalid form data")
     }
 
+    //initial flow that alawys contains the launch browser entry 
+    const initialFlow : {
+        nodes:AppNode[],
+        edges:Edge[],
+    } = {
+        nodes : [createFlowNode(TaskType.LAUNCH_BROWSER)],
+        edges : [],
+    }
+
+
     const result = await prisma.workflow.create({
         data: {
             userId,
             status: WorkflowStatus.DRAFT,
-            definition: "TODO",
+            definition: JSON.stringify(initialFlow),
             ...data
         }
     });
@@ -32,7 +46,7 @@ export async function CreateWorkflow(form:createWorkflowSchemaType){
         throw new Error("Failed to create workflow")
     };
 
-    redirect(`/workflows/editor/${result.id}`)
+    redirect(`/workflow/editor/${result.id}`)
 
 
 
