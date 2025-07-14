@@ -1,10 +1,13 @@
+import { cn } from "@/lib/utils";
 import { TaskParamType, TaskType } from "@/types/task";
 import { Code2Icon, GlobeIcon, LucideProps } from "lucide-react";
 
 export const ExtractHtmlTask = {
   type: TaskType.EXTRACT_HTML,
   label: "Extract HTML",
-  icon: (props: LucideProps) => <Code2Icon {...props} />,
+  icon: (props: LucideProps) => (
+    <Code2Icon {...props} className={cn(props.className, "text-rose-400")} />
+  ),
   isEntryPoint: false,
   inputs: [
     {

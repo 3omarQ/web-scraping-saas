@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { TaskParamType, TaskType } from "@/types/task";
 import {
   Code,
@@ -10,7 +11,9 @@ import {
 export const ExtractTextFromElementTask = {
   type: TaskType.EXTRACT_TEXT_FROM_ELEMENT,
   label: "Extract text from element",
-  icon: (props: LucideProps) => <TextIcon {...props} />,
+  icon: (props: LucideProps) => (
+    <TextIcon {...props} className={cn(props.className, "text-rose-400")} />
+  ),
   isEntryPoint: false,
   inputs: [
     {
