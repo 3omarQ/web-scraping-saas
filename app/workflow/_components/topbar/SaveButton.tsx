@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 function SaveButton({ workflowId }: { workflowId: string }) {
   const { toObject } = useReactFlow();
-  console.log(workflowId);
+  //console.log(workflowId);
 
   const saveMutation = useMutation({
     mutationFn: UpdateWorkflow,
@@ -29,7 +29,7 @@ function SaveButton({ workflowId }: { workflowId: string }) {
         });
       }}
     >
-      <CheckIcon></CheckIcon>
+      <CheckIcon className="stroke-green-400"></CheckIcon>
       Save
     </Button>
   );

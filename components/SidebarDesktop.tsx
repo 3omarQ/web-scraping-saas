@@ -39,7 +39,7 @@ function SidebarDesktop() {
   const { user } = useUser();
   return (
     <div className="flex flex-col justify-between relative min-w-[200px] h-screen overflow-hidden border-r-2 border-separate bg-primary/5">
-      <div className="flex items-center justify-center gap-2 border-b-2 border-separate p-2">
+      <div className="flex items-center justify-center gap-2 border-b-2 border-separate p-2 h-[60px]">
         <Logo />
       </div>
       <div className="flex-1 flex flex-col p-2 ">

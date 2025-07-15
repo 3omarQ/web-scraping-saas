@@ -12,7 +12,7 @@ function layout({ children }: { children: React.ReactNode }) {
       <div className="flex h-screen">
         <SidebarDesktop />
         <div className="flex flex-col flex-1 min-h-screen">
-          <header className="flex items-center justify-between px-6 py-4 h-[58px] container">
+          <header className="flex items-center justify-between px-6 py-4 h-[60px] border-b-2 ">
             <BreadcrumbHeader />
             <div>
               <SignedIn>
@@ -20,7 +20,7 @@ function layout({ children }: { children: React.ReactNode }) {
               </SignedIn>
             </div>
           </header>
-          <Separator />
+
           <div className="overflow-auto">
             <div className="flex-1 container py-4 text-accent-foreground">
               {children}

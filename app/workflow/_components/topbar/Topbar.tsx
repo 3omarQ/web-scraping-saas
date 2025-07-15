@@ -5,6 +5,7 @@ import { ChevronLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import SaveButton from "./SaveButton";
+import ExecuteButton from "./ExecuteButton";
 
 function Topbar({ title, workflowId }: { title: string; workflowId: string }) {
   const router = useRouter();
@@ -24,9 +25,9 @@ function Topbar({ title, workflowId }: { title: string; workflowId: string }) {
         <div className="font-bold flex-1 text-ellipsis truncate self-center">
           Workflow: {title}
         </div>
-        <div>
-          <SaveButton workflowId={workflowId}></SaveButton>
-        </div>
+        <ExecuteButton workflowId={workflowId}></ExecuteButton>
+
+        <SaveButton workflowId={workflowId}></SaveButton>
       </div>
     </header>
   );
