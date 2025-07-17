@@ -1,13 +1,27 @@
 import { AppNode } from "@/types/appNode";
 import { WorkflowExecutionPlan, WorkflowExecutionPlanPhase } from "@/types/workflow";
-import { Edge, getIncomers } from "@xyflow/react";
+import { Edge } from "@xyflow/react";
 import { TaskRegisty } from "./task/registry";
 
-export function FlowToExecutionPlan(nodes:AppNode[],edges:Edge[]) : WorkflowExecutionPlan{
+type FlowValidationError = {
+  nodeId: string;
+  inputName?: string;
+  message: string;
+};
+
+type FlowToExecutionPlanType = {
+    executionPlan: WorkflowExecutionPlan | null;
+    errors: FlowValidationError[];
+}
+
+export function FlowToExecutionPlan(nodes:AppNode[],edges:Edge[]) : FlowToExecutionPlanType{
     const entryPoint = nodes.find(nd=>TaskRegisty[nd.data.type].isEntryPoint)
 
+    const errors: FlowValidationError[] = [];
+
     if(!entryPoint){
-        throw new Error("invalid entry point")
+        errors.push({ nodeId: "", message: "Entry point doesn't exist" });
+        return { executionPlan: null, errors };
     }
 
     const plannedNodes = new Set<string>();
@@ -34,8 +48,13 @@ export function FlowToExecutionPlan(nodes:AppNode[],edges:Edge[]) : WorkflowExec
                 const incomers = getIncomers(currentNode,nodes,edges)
                 if(incomers.every(incomer=> plannedNodes.has(incomer.id))){
                     // if all incomers are planned, fma mochkol in our node so we throw an error
-                    console.error("invalid inputs", currentNode.id, invalidInputs);
-                    throw new Error("TODO: HANDLE INVALID INPUTS ERROR")
+                    invalidInputs.forEach((inputName) => {
+                                errors.push({
+                                    nodeId: currentNode.id,
+                                    inputName,
+                                    message: `Missing or invalid input: ${inputName}`,
+                                });
+                            });
                 }else{
                     continue;
                 }
@@ -48,8 +67,15 @@ export function FlowToExecutionPlan(nodes:AppNode[],edges:Edge[]) : WorkflowExec
         }
         executionPlan.push(nextPhase)
     }
+    if(errors.length>0){
+        errors
+    }
 
-    return executionPlan;
+    return {
+        executionPlan,
+        errors
+    }
+;
 }
 
 function getInvalidInputs(node: AppNode, edges:Edge[], planned:Set<string>){
@@ -90,3 +116,21 @@ function getInvalidInputs(node: AppNode, edges:Edge[], planned:Set<string>){
     }
     return invalidInputs
 }
+
+export const getIncomers = (
+  node: AppNode | { id: string },
+  nodes: AppNode[],
+  edges: Edge[]
+): AppNode[] => {
+  if (!node.id) {
+    return [];
+  }
+  const incomersIds = new Set();
+  edges.forEach((edge) => {
+    if (edge.target === node.id) {
+      incomersIds.add(edge.source);
+    }
+  });
+
+  return nodes.filter((n) => incomersIds.has(n.id));
+};

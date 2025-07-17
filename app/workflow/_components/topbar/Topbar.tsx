@@ -7,12 +7,22 @@ import React from "react";
 import SaveButton from "./SaveButton";
 import ExecuteButton from "./ExecuteButton";
 
-function Topbar({ title, workflowId }: { title: string; workflowId: string }) {
+function Topbar({
+  title,
+  subtitle,
+  workflowId,
+  hideButtons,
+}: {
+  title: string;
+  subtitle?: string;
+  workflowId: string;
+  hideButtons: boolean;
+}) {
   const router = useRouter();
   //console.log(workflowId);
   return (
-    <header className="flex p-2 border-b-2 border-separate justify-between w-full sticky">
-      <div className="flex gap-1 justify-between items-center w-full">
+    <header className="flex p-2 border-b-2 border-separate justify-between h-[60px] w-full sticky">
+      <div className="flex gap-1 flex-1">
         <Button
           variant={"ghost"}
           size={"icon"}
@@ -20,14 +30,24 @@ function Topbar({ title, workflowId }: { title: string; workflowId: string }) {
             router.back();
           }}
         >
-          <ChevronLeftIcon></ChevronLeftIcon>
+          <ChevronLeftIcon size={20}></ChevronLeftIcon>
         </Button>
-        <div className="font-bold flex-1 text-ellipsis truncate self-center">
-          Workflow: {title}
+        <div className="flex flex-col justify-center">
+          <p className="font-bold text-ellipsis truncate self-center">
+            {title}
+          </p>
+          {subtitle && (
+            <p className="text-xs text-muted-foreground truncate text-ellipsis">
+              {subtitle}
+            </p>
+          )}
         </div>
-        <ExecuteButton workflowId={workflowId}></ExecuteButton>
-
-        <SaveButton workflowId={workflowId}></SaveButton>
+        {!hideButtons && (
+          <div className="flex gap-1 flex-1 justify-end">
+            <ExecuteButton workflowId={workflowId}></ExecuteButton>
+            <SaveButton workflowId={workflowId}></SaveButton>
+          </div>
+        )}
       </div>
     </header>
   );

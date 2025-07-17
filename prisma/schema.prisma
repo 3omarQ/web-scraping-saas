@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  //output   = "../lib/generated/prisma"
+  output   = "../lib/generated/prisma"
 }
 
 datasource db {
@@ -14,19 +14,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Workflow{
-  id            String @id @default(cuid())
-  userId        String
-  name          String
-  description   String?
+model Workflow {
+  id          String  @id @default(cuid())
+  userId      String
+  name        String
+  description String?
 
-  definition    String
-  status        String
+  definition String
+  status     String
 
-  createdAt     DateTime @default(now())
-  updateAt      DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  executions WorkflowExecution[]
 
   //user cannot have two workflows with the same name
-  @@unique([name, userId ])
-  
+  @@unique([name, userId])
+}
+
+model WorkflowExecution {
+  id          String    @id @default(cuid())
+  workflowId  String
+  userId      String
+  trigger     String
+  status      String
+  createdAt   DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  workflow        Workflow         @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  executionPhases ExecutionPhase[]
+}
+
+model ExecutionPhase {
+  id                  String    @id @default(cuid())
+  userId              String
+  status              String
+  number              Int
+  node                String
+  name                String
+  startedAt           DateTime?
+  completedAt         DateTime?
+  inputs              String?
+  outputs             String?
+  workflowExecutionId String
+
+  execution WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
 }

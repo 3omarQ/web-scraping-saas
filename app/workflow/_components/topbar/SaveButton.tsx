@@ -13,7 +13,7 @@ function SaveButton({ workflowId }: { workflowId: string }) {
   const saveMutation = useMutation({
     mutationFn: UpdateWorkflow,
     onSuccess: () => toast.success("Workflow saved"),
-    onError: () => toast.success("There was an error while saving"),
+    onError: () => toast.error("There was an error while saving"),
   });
 
   return (

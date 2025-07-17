@@ -6,11 +6,14 @@ import { AppNodeData } from "@/types/appNode";
 import { TaskRegisty } from "@/lib/workflow/task/registry";
 import { NodeInputs, NodeInput } from "./NodeInputs";
 import { NodeOutput, NodeOutputs } from "./NodeOutputs";
+import { useFlowValidation } from "@/components/contexts/FlowValidationContext";
 
 const NodeComponent = memo((props: NodeProps) => {
+  const { errors } = useFlowValidation();
+  const nodeHasError = errors.some((err) => err.nodeId === props.id);
   const nodeData = props.data as AppNodeData;
   const task = TaskRegisty[nodeData.type];
-  console.log(task);
+  //console.log(task);
   return (
     <NodeCard isSelected={props.selected} nodeId={props.id}>
       <NodeHeader taskType={nodeData.type} nodeId={props.id} />

@@ -1,3 +1,4 @@
+import { RunWorkflow } from "@/actions/workflows/runWorkflow";
 import useExecutionPlan from "@/components/hooks/useExecutionPlan";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
@@ -10,21 +11,29 @@ function ExecuteButton({ workflowId }: { workflowId: string }) {
   const { toObject } = useReactFlow();
   const generateExecutionPlan = useExecutionPlan();
 
-  //   const saveMutation = useMutation({
-  //     mutationFn: ExecuteWorkflow,
-  //     onSuccess: () => toast.success("Workflow executed successfully"),
-  //     onError: () => toast.success("There was an error while saving"),
-  //   });
+  const saveMutation = useMutation({
+    mutationFn: RunWorkflow,
+    onSuccess: () => toast.success("Workflow executed successfully"),
+    onError: () =>
+      toast.error("Something went wrong while executing the workflow"),
+  });
   return (
     <div>
       <Button
-        //disabled={saveMutation.isPending}
+        disabled={saveMutation.isPending}
         variant={"outline"}
         className="flex items-center gap-2"
         onClick={() => {
           const plan = generateExecutionPlan();
-          console.log("@PLAN");
-          console.table(plan);
+          const workflowDefinition = JSON.stringify(toObject());
+
+          if (!plan) {
+            return;
+          }
+          saveMutation.mutate({
+            workflowId: workflowId,
+            workflowDefinition: workflowDefinition,
+          });
         }}
       >
         <PlayIcon className="stroke-orange-400"></PlayIcon>
