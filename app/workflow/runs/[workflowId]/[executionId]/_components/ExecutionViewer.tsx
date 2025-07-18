@@ -1,5 +1,6 @@
 "use client";
 
+import { GetExecutionPhaseDetails } from "@/actions/workflows/getExecutionPhaseDetails";
 import { GetWorkflowExecutionWithPhases } from "@/actions/workflows/getWorkflowExecutionWithPhases";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,17 +16,27 @@ import {
   LucideIcon,
   WorkflowIcon,
 } from "lucide-react";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 
 type ExecutionData = Awaited<ReturnType<typeof GetWorkflowExecutionWithPhases>>;
 
 function ExecutionViewer({ initialData }: { initialData: ExecutionData }) {
+  const [selectedPhase, setSelectedPhase] = useState<string | null>();
+
   const query = useQuery({
     queryKey: ["execution", initialData?.id],
     initialData,
     queryFn: () => GetWorkflowExecutionWithPhases(initialData!.id),
     refetchInterval: (q) =>
       q.state.data?.status === WorkflowExecutionStatus.RUNNING ? 1000 : false,
+  });
+
+  const isRunning = query.data?.status === WorkflowExecutionStatus.RUNNING;
+
+  const phaseDetails = useQuery({
+    queryKey: ["phaseDetails", selectedPhase],
+    enabled: selectedPhase != null,
+    queryFn: () => GetExecutionPhaseDetails(selectedPhase!),
   });
 
   return (
@@ -76,16 +87,26 @@ function ExecutionViewer({ initialData }: { initialData: ExecutionData }) {
             <Button
               key={phase.id}
               className="w-full justify-between"
-              variant={"ghost"}
+              variant={selectedPhase === phase.id ? "secondary" : "ghost"}
+              onClick={() => {
+                if (isRunning) {
+                  return;
+                }
+                setSelectedPhase(phase.id);
+              }}
             >
               <div className="flex items-center gap-2">
                 <Badge variant={"outline"}>{index + 1}</Badge>
                 <p className="font-semibold">{phase.name}</p>
               </div>
+              <p className="text-muted-foreground text-xs uppercase">
+                {phase.status}
+              </p>
             </Button>
           ))}
         </div>
       </aside>
+      <pre>{JSON.stringify(phaseDetails.data, null, 4)}</pre>
     </div>
   );
 }
