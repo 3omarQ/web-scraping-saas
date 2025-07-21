@@ -17,7 +17,7 @@ export const ExtractTextFromElementTask = {
   isEntryPoint: false,
   inputs: [
     {
-      name: "HTML",
+      name: "Html",
       type: TaskParamType.STRING,
       variant: "textarea",
       required: true,

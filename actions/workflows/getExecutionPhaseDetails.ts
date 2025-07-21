@@ -14,5 +14,12 @@ export async function GetExecutionPhaseDetails(phaseId:string){
             id:phaseId,
             userId,
         },
+        include:{
+            logs:{
+                orderBy:{
+                    timestamp : "asc"
+                }
+            }
+        }
     })
 }

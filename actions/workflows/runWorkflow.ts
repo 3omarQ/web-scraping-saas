@@ -70,6 +70,7 @@ export async function RunWorkflow(form:{workflowId:string, workflowDefinition?:s
                     })
                 })
             },
+            definition:workflowDefinition
             
 
         },
