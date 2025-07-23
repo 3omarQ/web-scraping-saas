@@ -42,7 +42,7 @@ export function NodeInput({
   return (
     <div
       className={cn(
-        "flex justify-start relative p-2 bg-secondary transition-colors duration-300",
+        "flex justify-start relative p-2 bg-secondary nodrag transition-colors duration-300",
         flash && "bg-rose-200"
       )}
     >

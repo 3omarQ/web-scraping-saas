@@ -26,7 +26,7 @@ export async function ExtractTextFromElementExecutor(environment:ExecutionEnviro
         environment.setOutput("Extracted text",innerHTML)
 
     } catch (error:any) {
-        environment.log.error(error)
+        environment.log.error(error.message)
     }
 
     return  true

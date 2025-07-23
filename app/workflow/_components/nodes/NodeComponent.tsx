@@ -10,7 +10,6 @@ import { useFlowValidation } from "@/components/contexts/FlowValidationContext";
 
 const NodeComponent = memo((props: NodeProps) => {
   const { errors } = useFlowValidation();
-  const nodeHasError = errors.some((err) => err.nodeId === props.id);
   const nodeData = props.data as AppNodeData;
   const task = TaskRegisty[nodeData.type];
   //console.log(task);

@@ -36,7 +36,8 @@ function StringParam({
       <Component
         id={id}
         value={internalValue}
-        onChange={(event: any) => updateNodeParamValue(event.target.value)}
+        onChange={(event: any) => setInternalValue(event.target.value)}
+        onBlur={() => updateNodeParamValue(internalValue)}
         disabled={disabled}
       />
     </div>

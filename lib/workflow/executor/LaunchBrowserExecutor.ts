@@ -9,14 +9,21 @@ export async function LaunchBrowserExecutor(environment:ExecutionEnvironment): P
 
     try {
         
-        const browser = await puppeteer.launch({headless:false});
+        const browser = await puppeteer.launch({headless:true});
         environment.setBrowser(browser);
         const page = await browser.newPage();
-        await page.goto(websiteUrl);
+        const response = await page.goto(websiteUrl, { timeout: 5000, waitUntil: "domcontentloaded" });
+        if (!response || !response.ok()) {
+            environment.log.error(`Failed to load: ${response?.status()}`);
+            return false;
+        }
         environment.setPage(page)
+
+        environment.log.info("No outputs for this phase.")
+
         
     } catch (error:any) {
-        environment.log.error(error)
+        environment.log.error(error.message)
         return false
     }
     

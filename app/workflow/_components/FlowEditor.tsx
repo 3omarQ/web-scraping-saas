@@ -163,7 +163,7 @@ function FlowEditor({ workflow }: { workflow: Workflow }) {
         onNodesChange={onNodesChange}
         nodeTypes={nodeTypes}
         fitView
-        fitViewOptions={{ padding: 3 }}
+        //fitViewOptions={{ padding: 2 }}
         onDragOver={onDragOver}
         onDrop={onDrop}
         onConnect={onConnect}

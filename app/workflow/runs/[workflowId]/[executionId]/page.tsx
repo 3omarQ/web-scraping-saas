@@ -16,16 +16,16 @@ function ExecutionViewerPage({
 }) {
   const { workflowId, executionId } = params;
   return (
-    <div className="flex flex-col h-screen w-full overflow-hidden">
+    <div className="flex flex-col w-full h-full overflow-hidden">
       <Topbar
         workflowId={workflowId}
         title="Workflow run details"
         hideButtons={true}
       />
-      <section className="flex h-full overflow-auto">
+      <section className="flex w-full h-full overflow-auto">
         <Suspense
           fallback={
-            <div className="flex w-full justify-center items-center">
+            <div className="flex w-full h-full justify-center items-center">
               <Loader2Icon className="h-10 w-10 animate-spin stroke-primary"></Loader2Icon>
             </div>
           }
@@ -46,7 +46,11 @@ async function ExecutionViewerWrapper({
   if (!workflowExecution) {
     return <div>Not found</div>;
   }
-  return <ExecutionViewer initialData={workflowExecution} />;
+  return (
+    <div className="w-full h-full">
+      <ExecutionViewer initialData={workflowExecution} />
+    </div>
+  );
 }
 
 export default ExecutionViewerPage;

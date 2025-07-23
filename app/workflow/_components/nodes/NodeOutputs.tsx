@@ -20,7 +20,7 @@ export function NodeOutput({
   //console.log(Output)
 
   return (
-    <div className="flex justify-end relative p-2 bg-secondary">
+    <div className="flex justify-end nodrag relative p-2 bg-secondary">
       <p className="text-xs text-muted-foreground">{output.name}</p>
       <Handle
         id={output.name}
