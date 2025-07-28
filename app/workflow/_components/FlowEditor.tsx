@@ -30,7 +30,13 @@ const nodeTypes = {
 
 const edgeTypes = {};
 
-function FlowEditor({ workflow }: { workflow: Workflow }) {
+function FlowEditor({
+  workflow,
+  locked,
+}: {
+  workflow: Workflow;
+  locked: boolean;
+}) {
   const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const { setViewport, screenToFlowPosition, updateNodeData } = useReactFlow();

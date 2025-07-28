@@ -20,8 +20,11 @@ model Workflow {
   name        String
   description String?
 
-  definition String
-  status     String
+  definition    String
+  executionPlan String?
+  status        String
+  shared        Boolean @default(false)
+  publicId      String? @unique
 
   lastRunAt     DateTime?
   lastRunId     String?

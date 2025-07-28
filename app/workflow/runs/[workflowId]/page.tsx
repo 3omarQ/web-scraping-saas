@@ -4,15 +4,17 @@ import { GetWorkflowExecutionWithPhases } from "@/actions/workflows/getWorkflowE
 import { GetWorkflowExecutions } from "@/actions/workflows/getWorkflowExecutions";
 import { InboxIcon, Loader2Icon } from "lucide-react";
 import ExecutionsTable from "./_components/ExecutionsTable";
+import { EditorMode } from "@/types/editorMode";
 
 function ExecutionsPage({ params }: { params: { workflowId: string } }) {
   return (
     <div className="h-full w-full overflow-auto">
       <Topbar
+        editorMode={EditorMode.OWNER}
         workflowId={params.workflowId}
         title="All runs"
         subtitle="List of all workflow runs"
-        hideButtons
+        hideButtons={true}
       ></Topbar>
       <Suspense
         fallback={

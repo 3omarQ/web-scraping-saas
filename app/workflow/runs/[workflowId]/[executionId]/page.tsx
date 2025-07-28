@@ -5,6 +5,7 @@ import { auth } from "@clerk/nextjs/server";
 import { Loader2Icon } from "lucide-react";
 import React, { Suspense } from "react";
 import ExecutionViewer from "./_components/ExecutionViewer";
+import { EditorMode } from "@/types/editorMode";
 
 function ExecutionViewerPage({
   params,
@@ -18,6 +19,7 @@ function ExecutionViewerPage({
   return (
     <div className="flex flex-col w-full h-full overflow-hidden">
       <Topbar
+        editorMode={EditorMode.OWNER}
         workflowId={workflowId}
         title="Workflow run details"
         hideButtons={true}

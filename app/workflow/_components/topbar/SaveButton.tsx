@@ -2,7 +2,7 @@ import { UpdateWorkflow } from "@/actions/workflows/updateWorkflow";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { useReactFlow } from "@xyflow/react";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, SaveIcon } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
 
@@ -29,7 +29,7 @@ function SaveButton({ workflowId }: { workflowId: string }) {
         });
       }}
     >
-      <CheckIcon className="stroke-green-400"></CheckIcon>
+      <SaveIcon className="stroke-green-400"></SaveIcon>
       Save
     </Button>
   );
