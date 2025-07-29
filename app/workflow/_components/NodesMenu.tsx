@@ -18,7 +18,7 @@ function NodesMenu() {
       <Accordion
         className="w-full"
         type="multiple"
-        defaultValue={["extraction", "interaction"]}
+        defaultValue={["extraction", "interaction", "AI"]}
       >
         <AccordionItem value="extraction">
           <AccordionTrigger className="font-bold">Extraction</AccordionTrigger>
@@ -36,6 +36,12 @@ function NodesMenu() {
           </AccordionContent>
           <AccordionContent className="flex flex-col gap-2">
             <TaskMenuBtn taskType={TaskType.CLICK_ELEMENT}></TaskMenuBtn>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="AI">
+          <AccordionTrigger className="font-bold">AI</AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-2">
+            <TaskMenuBtn taskType={TaskType.EXTRACT_DATA_WITH_AI}></TaskMenuBtn>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

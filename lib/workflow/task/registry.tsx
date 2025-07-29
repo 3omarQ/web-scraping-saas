@@ -1,4 +1,5 @@
 import { ClickElement } from "./ClickElement";
+import { ExtractDataWithAI } from "./ExtractDataWithAi";
 import { ExtractHtmlTask } from "./ExtractHtml";
 import { ExtractTextFromElementTask } from "./ExtractTextFromElement";
 import { FillInputTask } from "./FillInput";
@@ -10,4 +11,5 @@ export const TaskRegisty = {
   EXTRACT_TEXT_FROM_ELEMENT: ExtractTextFromElementTask,
   FILL_INPUT: FillInputTask,
   CLICK_ELEMENT: ClickElement,
+  EXTRACT_DATA_WITH_AI: ExtractDataWithAI,
 };

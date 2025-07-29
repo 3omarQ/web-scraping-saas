@@ -4,6 +4,7 @@ import { ExtractTextFromElementExecutor } from "./ExtractTextFromElementExecutor
 import { LaunchBrowserExecutor } from "./LaunchBrowserExecutor";
 import { FillInputExecutor } from "./FillInputExecutor";
 import { ClickElementExecutor } from "./ClickElementExecutor";
+import { ExtractDataWithAIExecutor } from "./ExtractDataWithAIExecutor";
 
 type ExecutorFn = (environment: ExecutionEnvironment) => Promise<boolean>;
 
@@ -13,4 +14,5 @@ export const ExecutorRegistry = {
   EXTRACT_TEXT_FROM_ELEMENT: ExtractTextFromElementExecutor,
   FILL_INPUT: FillInputExecutor,
   CLICK_ELEMENT: ClickElementExecutor,
+  EXTRACT_DATA_WITH_AI: ExtractDataWithAIExecutor,
 };
