@@ -1,9 +1,165 @@
-import React from 'react'
+// app/logs/page.tsx (or similar)
 
-function Logs() {
+"use client";
+
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
+import { GetWorkflowsForUser } from "@/actions/workflows/getWorkflowsForUser"; // you need to implement this
+import { GetWorkflowExecutionWithPhases } from "@/actions/workflows/getWorkflowExecutionWithPhases"; // you need to implement this
+import { Workflow } from "@prisma/client"; // or your custom type
+import ParameterViewer from "@/app/workflow/runs/[workflowId]/[executionId]/_components/ParameterViewer";
+import { GetExecutionPhaseDetails } from "@/actions/workflows/getExecutionPhaseDetails";
+import LogViewer from "@/app/workflow/runs/[workflowId]/[executionId]/_components/LogViewer";
+import { useRouter } from "next/navigation";
+
+export default function LogsPage() {
+  const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(
+    null
+  );
+  const router = useRouter();
+
+  const [selectedPhase, setSelectedPhase] = useState<string | null>(null);
+  const workflowsQuery = useQuery({
+    queryKey: ["publishedWorkflows"],
+    queryFn: () => GetWorkflowsForUser(),
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const lastWorkflowExecutionId = selectedWorkflow?.lastRunId;
+
+  const phasesQuery = useQuery({
+    queryKey: ["workflowPhases"],
+    queryFn: async () => {
+      if (!selectedWorkflow) throw new Error("No workflow selected");
+      if (!lastWorkflowExecutionId) throw new Error("workflow has no runs yet");
+      return await GetWorkflowExecutionWithPhases(lastWorkflowExecutionId);
+    },
+    enabled: !!selectedWorkflow, // don't run if no workflow selected
+  });
+
+  const phaseDetails = useQuery({
+    queryKey: ["phaseDetails", selectedPhase],
+    enabled: selectedPhase != null,
+    queryFn: () => GetExecutionPhaseDetails(selectedPhase!),
+  });
+
+  useEffect(() => {
+    const phases = phasesQuery.data?.executionPhases;
+    if (!phases || phases.length === 0) return;
+
+    const phaseToSelect = phases.toSorted((a, b) =>
+      a.completedAt && b.completedAt
+        ? b.completedAt.getTime() - a.completedAt.getTime()
+        : 0
+    )[0];
+
+    if (phaseToSelect) {
+      setSelectedPhase(phaseToSelect.id);
+    }
+  }, [phasesQuery.data?.executionPhases]);
   return (
-    <div>Logs</div>
-  )
-}
+    <div className="flex h-full">
+      {/* Left: Workflow list */}
+      <aside className="w-[300px] border-r p-4 overflow-auto ">
+        <h2 className="text-lg font-bold mb-4">Workflows</h2>
+        {workflowsQuery.data?.map((workflow) => (
+          <Button
+            key={workflow.id}
+            variant={
+              selectedWorkflow?.id === workflow.id ? "secondary" : "ghost"
+            }
+            className="w-full justify-start mb-2"
+            onClick={() => {
+              setSelectedWorkflow(workflow);
+              setSelectedPhase(null);
+            }}
+          >
+            {workflow.name}
+          </Button>
+        ))}
+      </aside>
 
-export default Logs
+      {/* Right: Phases + Logs */}
+      <main className="flex-1 flex flex-col p-4 overflow-auto h-full">
+        {selectedWorkflow && (
+          <>
+            {/* Top: Phases */}
+            <div className="flex flex-wrap gap-2 mb-4">
+              {phasesQuery.data?.executionPhases.map((phase, index) => (
+                <Button
+                  key={phase.id}
+                  className="justify-between"
+                  variant={selectedPhase === phase.id ? "secondary" : "ghost"}
+                  onClick={() => {
+                    setSelectedPhase(phase.id);
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <Badge variant={"outline"}>{index + 1}</Badge>
+                    <p className="font-semibold">{phase.name}</p>
+                  </div>
+                </Button>
+              ))}
+            </div>
+
+            {/* Bottom: Logs Viewer */}
+            {!selectedPhase && (
+              <div className="flex items-center flex-cold gap-2 justify-center h-full w-full">
+                <div className="flex flex-col gap-1 text-center">
+                  <p className="font-bold">No phase selected</p>
+                  <p className="text-sm text-muted-foreground">
+                    Select a phase to view details
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {phaseDetails.data && (
+              <div className="flex flex-col flex-1 overflow-auto gap-2">
+                <div>
+                  <ParameterViewer
+                    title="Inputs"
+                    subtitle="Inputs used for this phase"
+                    paramsJSON={phaseDetails.data!.inputs}
+                  />
+                </div>
+                <div>
+                  <ParameterViewer
+                    variant="textarea"
+                    title="Outputs"
+                    subtitle="Outputs generated by this phase"
+                    paramsJSON={phaseDetails.data!.outputs}
+                  />
+                </div>
+
+                <LogViewer logs={phaseDetails.data!.logs} />
+              </div>
+            )}
+
+            {/* Very bottom: View all runs */}
+            <div className="pt-4 mt-auto flex justify-end self-end">
+              <Button
+                variant="link"
+                className="text-sm"
+                onClick={() =>
+                  router.push(`/workflow/runs/${selectedWorkflow.id}`)
+                }
+              >
+                View All Runs →
+              </Button>
+            </div>
+          </>
+        )}
+
+        {!selectedWorkflow && (
+          <p className="text-muted-foreground">
+            Select a workflow to view logs
+          </p>
+        )}
+      </main>
+    </div>
+  );
+}
+//TODO:Fix the spaghetti

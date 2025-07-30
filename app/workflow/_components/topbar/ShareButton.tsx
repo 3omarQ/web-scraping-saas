@@ -35,7 +35,7 @@ function ShareButton({ workflowId }: { workflowId: string }) {
         variant={"outline"}
         className="flex items-center gap-2"
         onClick={() => {
-          toast.loading("Publishing workflow...", { id: workflowId });
+          toast.loading("Sharing workflow...", { id: workflowId });
           shareMutation.mutate({
             id: workflowId,
           });
@@ -56,3 +56,4 @@ function ShareButton({ workflowId }: { workflowId: string }) {
 }
 
 export default ShareButton;
+//TODO: fix problem where the pop up dialog shows twice

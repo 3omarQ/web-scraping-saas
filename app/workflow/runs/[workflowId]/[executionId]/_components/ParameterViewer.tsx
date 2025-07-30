@@ -6,17 +6,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import React from "react";
+
+type ParameterViewerProps = {
+  title: string;
+  subtitle: string;
+  paramsJSON: string | null;
+  variant?: "input" | "textarea";
+};
 
 function ParameterViewer({
   title,
   subtitle,
   paramsJSON,
-}: {
-  title: string;
-  subtitle: string;
-  paramsJSON: string | null;
-}) {
+  variant = "input",
+}: ParameterViewerProps) {
   const params = paramsJSON ? JSON.parse(paramsJSON) : null;
 
   return (
@@ -34,15 +39,26 @@ function ParameterViewer({
           )}
           {params &&
             Object.entries(params).map(([key, value]) => (
-              <div key={key} className="flex justify-between items-center">
+              <div
+                key={key}
+                className="flex justify-between items-center gap-2"
+              >
                 <p className="text-sm text-muted-foreground flex-1 basis-1/3">
                   {key}
                 </p>
-                <Input
-                  readOnly
-                  className="flex basis-2/3"
-                  value={value as string}
-                />
+                {variant === "textarea" ? (
+                  <Textarea
+                    readOnly
+                    className="flex basis-2/3"
+                    value={value as string}
+                  />
+                ) : (
+                  <Input
+                    readOnly
+                    className="flex basis-2/3"
+                    value={value as string}
+                  />
+                )}
               </div>
             ))}
         </div>

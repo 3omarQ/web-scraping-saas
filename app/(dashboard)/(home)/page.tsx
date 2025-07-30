@@ -3,8 +3,9 @@ import React, { Suspense } from "react";
 import PeriodSelector from "./_components/PeriodSelector";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetStatsCardsValues } from "@/actions/analytics/getStatsCardsValues";
-import { CirclePlayIcon } from "lucide-react";
+import { CirclePlayIcon, WaypointsIcon } from "lucide-react";
 import StatsCard from "./_components/StatsCard";
+import StatsExecutionStatus from "./_components/StatsExecutionStatus";
 
 function HomePage({
   searchParams,
@@ -29,7 +30,10 @@ function HomePage({
           ></PeriodSelectorWrapper>
         </Suspense>
       </div>
-      <StatsCards selectedPeriod={period} />
+      <div className="h-full py-6 flex flex-col gap-4">
+        <StatsCards selectedPeriod={period} />
+        <StatsExecutionStatus selectedPeriod={period}></StatsExecutionStatus>
+      </div>
     </div>
   );
 }
@@ -55,11 +59,16 @@ async function StatsCards({
 }) {
   const data = await GetStatsCardsValues(selectedPeriod);
   return (
-    <div>
+    <div className="grid gap-3 lg:grid-cols-2">
       <StatsCard
         title="Workflow executions"
         value={data.workflowExecutions}
         icon={CirclePlayIcon}
+      ></StatsCard>
+      <StatsCard
+        title="Phase executions"
+        value={data.phaseExecutions}
+        icon={WaypointsIcon}
       ></StatsCard>
     </div>
   );

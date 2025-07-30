@@ -30,6 +30,7 @@ function NodeHeader({
           <div>{task.isEntryPoint && <Badge>Entry point</Badge>}</div>
           {!task.isEntryPoint && (
             <div>
+              {/* delete button */}
               <Button
                 className="text-xs w-3"
                 variant={"ghost"}
@@ -39,6 +40,8 @@ function NodeHeader({
               >
                 <Trash2Icon size={12}></Trash2Icon>
               </Button>
+
+              {/* copy button */}
               <Button
                 className="text-xs w-3"
                 variant={"ghost"}
@@ -67,3 +70,4 @@ function NodeHeader({
 }
 
 export default NodeHeader;
+//TODO: refactor, implement delete and copy buttons in external component
