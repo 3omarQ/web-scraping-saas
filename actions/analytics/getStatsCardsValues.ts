@@ -35,6 +35,10 @@ export async function GetStatsCardsValues(period: {
         where: {
           status: WorkflowExecutionStatus.FINISHED,
         },
+
+        select: {
+          id: true, // only fetch what's necessary
+        },
       },
     },
   });

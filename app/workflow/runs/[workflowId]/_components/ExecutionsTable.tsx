@@ -9,14 +9,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDate, formatDistance, formatDistanceToNow } from "date-fns";
 import React from "react";
 import PhaseStatusBadge from "../[executionId]/_components/PhaseStatusBadge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { CopyIcon } from "lucide-react";
+import {
+  CopyIcon,
+  ExternalLinkIcon,
+  Link2Icon,
+  LinkIcon,
+  Trash2Icon,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
+import { DeleteExecution } from "@/actions/runs/deleteExecution";
 
 type initialData = Awaited<ReturnType<typeof GetWorkflowExecutions>>;
 
@@ -27,12 +34,30 @@ function ExecutionsTable({
   workflowId: string;
   initialData: initialData;
 }) {
+  const queryClient = useQueryClient();
   const query = useQuery({
     initialData,
     queryKey: [workflowId, "executions"],
     queryFn: () => GetWorkflowExecutions(workflowId),
     refetchInterval: 5000,
   });
+  const { mutate, isPending } = useMutation({
+    mutationFn: DeleteExecution,
+    onMutate: () => {
+      toast.loading("Deleting execution", { id: "delete-Execution" });
+    },
+    onSuccess: (__, deletedId) => {
+      toast.success("Execution deleted", { id: "delete-Execution" });
+
+      queryClient.setQueryData<initialData>([workflowId, "executions"], (old) =>
+        old ? old.filter((e) => e.id !== deletedId) : []
+      );
+    },
+    onError: () => {
+      toast.error("Error deleting execution", { id: "delete-Execution" });
+    },
+  });
+
   const router = useRouter();
   return (
     <div className="border rounded-lg shadow-md overflow-auto">
@@ -43,7 +68,8 @@ function ExecutionsTable({
             <TableHead className="flex w-full justify-center items-center">
               Status
             </TableHead>
-            <TableHead className="">Started at (desc)</TableHead>
+            <TableHead>Started at (desc)</TableHead>
+            <TableHead>Delete</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="gap-2 h-full overflow-auto">
@@ -58,25 +84,20 @@ function ExecutionsTable({
               { addSuffix: true }
             );
             return (
-              <TableRow
-                key={execution.id}
-                className="cursor-pointer"
-                onClick={() => {
-                  router.push(`/workflow/runs/${workflowId}/${execution.id}`);
-                }}
-              >
+              <TableRow key={execution.id}>
                 <TableCell className="max-w-[70px] truncate whitespace-nowrap overflow-hidden">
                   <div className="   flex items-center gap-2">
                     <span className="truncate">{execution.id}</span>
                     <Button
                       variant={"outline"}
+                      className="cursor-pointer"
                       onClick={() => {
-                        navigator.clipboard.writeText(execution.id);
-                        toast.success("Copied ID to clipboard");
+                        router.push(
+                          `/workflow/runs/${workflowId}/${execution.id}`
+                        );
                       }}
-                      className="p-1 hover:bg-muted rounded"
                     >
-                      <CopyIcon size={14} />
+                      <ExternalLinkIcon size={14} />
                     </Button>
                   </div>
                 </TableCell>
@@ -93,6 +114,18 @@ function ExecutionsTable({
                 </TableCell>
                 <TableCell className="text-muted-foreground">
                   {startedAtFormatted}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant={"ghost"}
+                    className="hover:outline-destructive/80"
+                    disabled={isPending}
+                    onClick={() => {
+                      mutate(execution.id);
+                    }}
+                  >
+                    <Trash2Icon className="stroke-destructive" />
+                  </Button>
                 </TableCell>
               </TableRow>
             );
