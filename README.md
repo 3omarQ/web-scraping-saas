@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Web Scraping Workflow Automation Platform
 
-## Getting Started
+This project is a web application designed to automate **web scraping workflows** through a **visual and intuitive interface**.  
+It allows users to create, execute, monitor, and share scraping workflows **without writing code**.
 
-First, run the development server:
+The project was developed as an academic project at **VisioAd** in a summer internship.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Visual workflow editor (node-based)
+- Create, edit, and delete scraping workflows
+- Execute workflows and monitor their progress
+- View execution history and detailed logs
+- Share workflows via public links (read-only)
+- Clone shared workflows
+- Secure authentication and user management
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+---
 
-## Learn More
+## Actors
 
-To learn more about Next.js, take a look at the following resources:
+- **User**
+  - Create, edit, execute, share, and clone workflows
+  - View execution results and logs
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Guest**
+  - View shared workflows in read-only mode
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Architecture
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The application follows the **MVC (Model–View–Controller)** architectural pattern to ensure:
+- Clear separation of concerns
+- Maintainability
+- Scalability
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+---
+
+## Technologies Used
+
+- **Next.js** – Full-stack React framework
+- **React Flow** – Visual workflow editor
+- **Puppeteer** – Web scraping engine
+- **Prisma** – ORM for database management
+- **Clerk** – Authentication and user management
+- **PostgreSQL** – Database
+- **Figma** – UI/UX design
+- **Postman** – API testing
+- **GitHub** – Version control
+
+---
+
+## User Interface
+
+### Authentication
+Secure authentication using Clerk.
+
+<img width="1921" height="1081" alt="image" src="https://github.com/user-attachments/assets/5f80fecc-6489-41b7-8bcb-28e014f916a6" />
+
+---
+
+### Dashboard
+Overview of executions, phases, and statistics.
+
+<img width="1921" height="1081" alt="image" src="https://github.com/user-attachments/assets/ca0fe7fa-6626-4e51-86c1-ab38065b11f7" />
+
+---
+
+### Workflow Management
+List of all workflows with options to execute, edit, delete, or share.
+
+<img width="1921" height="1081" alt="image" src="https://github.com/user-attachments/assets/b8c77e60-55d6-42ab-85bd-c8948f531218" />
+
+---
+
+
+### Visual Workflow Editor
+Drag-and-drop editor to build scraping workflows using connected nodes.
+
+<img width="1921" height="1081" alt="image" src="https://github.com/user-attachments/assets/3dddaf88-eccb-432b-8468-04676d7b20cd" />
+
+---
+
+### Execution Monitoring
+Track workflow executions and view their status.
+
+<img width="1921" height="1081" alt="image" src="https://github.com/user-attachments/assets/20e0e4dc-8f85-448c-8a38-2faa4e8d917a" />
+
+---
+
+### Logs Viewer
+Detailed logs for debugging and monitoring workflow behavior.
+
+<img width="1921" height="1081" alt="image" src="https://github.com/user-attachments/assets/3d7d7cee-662f-4f2e-acd9-b2234372d4f2" />
+
