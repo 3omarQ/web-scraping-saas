@@ -2,7 +2,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { DEFAULT_USER_ID } from "@/lib/user";
 import { WorkflowStatus } from "@/types/workflow";
 
 export async function CloneWorkflow({
@@ -14,16 +14,11 @@ export async function CloneWorkflow({
   name: string;
   description?: string;
 }) {
-  const { userId } = auth();
-  if (!userId) {
-    throw new Error("unauthenticated");
-  }
-
   const newWorkflow = await prisma.workflow.create({
     data: {
       name,
       description,
-      userId,
+      userId: DEFAULT_USER_ID,
       definition,
       status: WorkflowStatus.DRAFT,
     },

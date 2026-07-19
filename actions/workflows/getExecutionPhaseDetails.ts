@@ -1,18 +1,13 @@
 "use server"
 
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { DEFAULT_USER_ID } from "@/lib/user";
 
 export async function GetExecutionPhaseDetails(phaseId:string){
-    const {userId} = auth();
-    if(!userId){
-        throw new Error("unauthenticated");
-    }
-
     return prisma.executionPhase.findUnique({
         where:{
             id:phaseId,
-            userId,
+            userId: DEFAULT_USER_ID,
         },
         include:{
             logs:{

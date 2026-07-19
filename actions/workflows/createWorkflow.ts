@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { DEFAULT_USER_ID } from "@/lib/user";
 import { createWorkflowSchema, createWorkflowSchemaType } from "@/schema/workflow";
 import {z } from "zod";
 import { error } from "console";
@@ -13,11 +13,6 @@ import { createFlowNode } from "@/lib/workflow/createFlowNode";
 import { TaskType } from "@/types/task";
 
 export async function CreateWorkflow(form:createWorkflowSchemaType){
-    const {userId} = auth();
-    if(!userId){
-        throw new Error("unauthenticated");
-    }
-
     const {success,data} = createWorkflowSchema.safeParse(form)
     if(!success){
         throw new Error("invalid form data")
@@ -35,7 +30,7 @@ export async function CreateWorkflow(form:createWorkflowSchemaType){
 
     const result = await prisma.workflow.create({
         data: {
-            userId,
+            userId: DEFAULT_USER_ID,
             status: WorkflowStatus.DRAFT,
             definition: JSON.stringify(initialFlow),
             ...data

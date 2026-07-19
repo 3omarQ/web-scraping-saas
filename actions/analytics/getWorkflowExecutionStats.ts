@@ -2,17 +2,13 @@
 
 import { prisma } from "@/lib/prisma";
 import { WorkflowExecutionStatus } from "@/types/workflow";
-import { auth } from "@clerk/nextjs/server";
+import { DEFAULT_USER_ID } from "@/lib/user";
 import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns";
 
 export async function GetWorkflowExecutionStats(period: {
   year: number;
   month: number;
 }) {
-  const { userId } = auth();
-  if (!userId) {
-    throw new Error("unauthenticated");
-  }
   const dateFormat = "yyyy-MM-dd";
 
   const startDate = startOfMonth(new Date(period.year, period.month));
@@ -20,7 +16,7 @@ export async function GetWorkflowExecutionStats(period: {
   const dateRange = { startDate, endDate };
   const executions = await prisma.workflowExecution.findMany({
     where: {
-      userId,
+      userId: DEFAULT_USER_ID,
       startedAt: {
         gte: dateRange.startDate,
         lte: dateRange.endDate,

@@ -2,8 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { WorkflowExecutionStatus } from "@/types/workflow";
-import { auth } from "@clerk/nextjs/server";
-import { endOfMonth, startOfMinute, startOfMonth } from "date-fns";
+import { DEFAULT_USER_ID } from "@/lib/user";
+import { endOfMonth, startOfMonth } from "date-fns";
 
 export async function GetStatsCardsValues(period: {
   year: number;
@@ -13,15 +13,9 @@ export async function GetStatsCardsValues(period: {
   const endDate = endOfMonth(new Date(period.year, period.month));
   const dateRange = { startDate, endDate };
 
-  const { userId } = auth();
-
-  if (!userId) {
-    throw new Error("User not found");
-  }
-
   const executions = await prisma.workflowExecution.findMany({
     where: {
-      userId,
+      userId: DEFAULT_USER_ID,
       startedAt: {
         gte: dateRange.startDate,
         lte: dateRange.endDate,

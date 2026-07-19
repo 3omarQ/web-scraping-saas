@@ -1,17 +1,15 @@
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { DEFAULT_USER_ID } from "@/lib/user";
 import React from "react";
 import Editor from "../../_components/Editor";
 import { EditorMode } from "@/types/editorMode";
 
 async function page({ params }: { params: { workflowId: string } }) {
   const { workflowId } = params;
-  const { userId } = auth();
-  if (!userId) throw new Error("Not authenticated");
   const workflow = await prisma.workflow.findUnique({
     where: {
       id: workflowId,
-      userId,
+      userId: DEFAULT_USER_ID,
     },
   });
   if (!workflow) {

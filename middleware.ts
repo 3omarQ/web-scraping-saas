@@ -1,16 +1,9 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+// Authentication has been removed
+// No middleware protection needed
 
-const isPublicRoute = createRouteMatcher([
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-  "/workflow/shared(.*)",
-]);
-
-export default clerkMiddleware((auth, request) => {
-  if (!isPublicRoute(request)) {
-    auth().protect(); // Throws 401 automatically if not authenticated
-  }
-});
+export default function middleware() {
+  // No-op middleware — passes through all requests
+}
 
 export const config = {
   matcher: [

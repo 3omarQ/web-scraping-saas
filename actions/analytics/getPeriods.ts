@@ -1,15 +1,11 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { DEFAULT_USER_ID } from "@/lib/user";
 
 export async function GetPeriods() {
-  const { userId } = auth();
-  if (!userId) {
-    throw new Error("unauthenticated");
-  }
   const years = await prisma.workflowExecution.aggregate({
-    where: { userId },
+    where: { userId: DEFAULT_USER_ID },
     _min: { startedAt: true },
   });
   const currentYear = new Date().getFullYear();

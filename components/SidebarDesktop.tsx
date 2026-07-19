@@ -1,12 +1,11 @@
 "use client";
-import { HomeIcon, Layers2Icon, LogsIcon, UserIcon } from "lucide-react";
+import { HomeIcon, Layers2Icon, LogsIcon } from "lucide-react";
 
 import React from "react";
 import Logo from "./Logo";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import { usePathname } from "next/navigation";
-import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 
 const routes = [
   {
@@ -24,11 +23,6 @@ const routes = [
     label: "Logs",
     icon: LogsIcon,
   },
-  // {
-  //     href: "profile",
-  //     label: "Profile",
-  //     icon : UserIcon
-  // },
 ];
 function SidebarDesktop() {
   const pathname = usePathname();
@@ -36,7 +30,6 @@ function SidebarDesktop() {
     routes.find(
       (route) => route.href.length > 0 && pathname.startsWith(`/${route.href}`)
     ) || routes[0];
-  const { user } = useUser();
   return (
     <div className="flex flex-col justify-between relative min-w-[200px] h-screen overflow-hidden border-r-2 border-separate bg-primary/5">
       <div className="flex items-center justify-center gap-2 border-b-2 border-separate p-2 h-[60px]">
@@ -57,12 +50,9 @@ function SidebarDesktop() {
           </Link>
         ))}
       </div>
-      <SignedIn>
-        <div className="flex items-center gap-2 p-4 border-t text-sm">
-          <UserButton />
-          <span className="truncate">{user?.fullName || user?.username}</span>
-        </div>
-      </SignedIn>
+      <div className="flex items-center gap-2 p-4 border-t text-sm text-muted-foreground">
+        <span>XpresFlow</span>
+      </div>
     </div>
   );
 }

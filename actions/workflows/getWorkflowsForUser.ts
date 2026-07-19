@@ -1,18 +1,12 @@
 'use server';
 
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { DEFAULT_USER_ID } from "@/lib/user";
 
 export async function GetWorkflowsForUser(){
-    const {userId} = auth();
-    if(!userId){
-        throw new Error("unauthenticated");
-    }
-        //throw new Error("unauthenticated");
-
     return prisma.workflow.findMany({
         where:{
-            userId,
+            userId: DEFAULT_USER_ID,
         },
         orderBy:{
             createdAt:"asc"

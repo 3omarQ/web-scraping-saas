@@ -93,14 +93,10 @@ function Topbar({
           )}
 
           {editorMode === EditorMode.VIEWER_ANON && !hideButtons && (
-            <Link
-              href={`/sign-in?redirect_url=${encodeURIComponent(pathname)}`}
-            >
-              <Button variant="outline" className="flex gap-1">
-                <UserIcon size={16} />
-                Login / Signup
-              </Button>
-            </Link>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <UserIcon size={14} />
+              Viewing shared workflow
+            </div>
           )}
         </div>
       </div>

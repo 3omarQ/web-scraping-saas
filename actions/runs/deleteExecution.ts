@@ -1,22 +1,16 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { DEFAULT_USER_ID } from "@/lib/user";
 import { revalidatePath } from "next/cache";
 
 export async function DeleteExecution(id: string) {
-  const { userId } = auth();
-
-  if (!userId) {
-    throw new Error("unauthenticated");
-  }
-
   const execution = await prisma.workflowExecution.findUnique({
     where: { id },
     select: { workflowId: true, userId: true },
   });
 
-  if (!execution || execution.userId !== userId) {
+  if (!execution || execution.userId !== DEFAULT_USER_ID) {
     throw new Error("Not found or unauthorized");
   }
 
