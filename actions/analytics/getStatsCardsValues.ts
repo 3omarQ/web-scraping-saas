@@ -49,7 +49,7 @@ export async function GetStatsCardsValues(period: {
   };
 
   stats.phaseExecutions = executions.reduce(
-    (sum, execution) => sum + execution.executionPhases.length,
+    (sum: any, execution: any) => sum + execution.executionPhases.length,
     0
   );
 
