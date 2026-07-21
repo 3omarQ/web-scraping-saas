@@ -3,6 +3,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import UserWorkflowsClient from "./_components/UserWorkflowsClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
   const workflows = await GetWorkflowsForUser();
 
