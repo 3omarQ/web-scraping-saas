@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { DEFAULT_USER_ID } from "@/lib/user";
+import { getUserId } from "@/lib/user";
 import { revalidatePath } from "next/cache";
 
 export async function DeleteExecution(id: string) {
@@ -10,7 +10,8 @@ export async function DeleteExecution(id: string) {
     select: { workflowId: true, userId: true },
   });
 
-  if (!execution || execution.userId !== DEFAULT_USER_ID) {
+  const currentUserId = await getUserId();
+  if (!execution || execution.userId !== currentUserId) {
     throw new Error("Not found or unauthorized");
   }
 

@@ -2,7 +2,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { DEFAULT_USER_ID } from "@/lib/user";
+import { getUserId } from "@/lib/user";
 import { WorkflowStatus } from "@/types/workflow";
 
 export async function CloneWorkflow({
@@ -18,7 +18,7 @@ export async function CloneWorkflow({
     data: {
       name,
       description,
-      userId: DEFAULT_USER_ID,
+      userId: await getUserId(),
       definition,
       status: WorkflowStatus.DRAFT,
     },

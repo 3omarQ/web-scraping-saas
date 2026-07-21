@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { WorkflowExecutionStatus } from "@/types/workflow";
-import { DEFAULT_USER_ID } from "@/lib/user";
+import { getUserId } from "@/lib/user";
 import { endOfMonth, startOfMonth } from "date-fns";
 
 export async function GetStatsCardsValues(period: {
@@ -15,7 +15,7 @@ export async function GetStatsCardsValues(period: {
 
   const executions = await prisma.workflowExecution.findMany({
     where: {
-      userId: DEFAULT_USER_ID,
+      userId: await getUserId(),
       startedAt: {
         gte: dateRange.startDate,
         lte: dateRange.endDate,

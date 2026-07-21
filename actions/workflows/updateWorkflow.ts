@@ -1,7 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/prisma";
-import { DEFAULT_USER_ID } from "@/lib/user";
+import { getUserId } from "@/lib/user";
 import { revalidatePath } from "next/cache";
 
 export async function UpdateWorkflow({
@@ -11,10 +11,12 @@ export async function UpdateWorkflow({
     id:string,
     definition:string
 }){
+    const userId = await getUserId();
+
     const workflow = await prisma.workflow.findUnique({
         where:{
             id,
-            userId: DEFAULT_USER_ID,
+            userId,
         },
     });
 
@@ -26,7 +28,7 @@ export async function UpdateWorkflow({
         },
         where:{
             id,
-            userId: DEFAULT_USER_ID,
+            userId,
         }
     })
 

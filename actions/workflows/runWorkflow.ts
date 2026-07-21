@@ -10,7 +10,7 @@ import {
   WorkflowExecutionTrigger,
   WorkflowStatus,
 } from "@/types/workflow";
-import { DEFAULT_USER_ID } from "@/lib/user";
+import { getUserId } from "@/lib/user";
 import { redirect } from "next/navigation";
 
 export async function RunWorkflow(form: {
@@ -22,9 +22,11 @@ export async function RunWorkflow(form: {
     throw new Error("workflowId is required");
   }
 
+  const userId = await getUserId();
+
   const workflow = await prisma.workflow.findUnique({
     where: {
-      userId: DEFAULT_USER_ID,
+      userId,
       id: workflowId,
     },
   });
@@ -64,7 +66,7 @@ export async function RunWorkflow(form: {
   const execution = await prisma.workflowExecution.create({
     data: {
       workflowId,
-      userId: DEFAULT_USER_ID,
+      userId,
       status: WorkflowExecutionStatus.PENDING,
       startedAt: new Date(),
       trigger: WorkflowExecutionTrigger.MANUAL,
@@ -72,7 +74,7 @@ export async function RunWorkflow(form: {
         create: executionPlan.flatMap((executionPhase) => {
           return executionPhase.nodes.flatMap((node) => {
             return {
-              userId: DEFAULT_USER_ID,
+              userId,
               status: WorkflowExecutionStatus.CREATED,
               number: executionPhase.phase,
               node: JSON.stringify(node),

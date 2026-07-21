@@ -1,11 +1,11 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { DEFAULT_USER_ID } from "@/lib/user";
+import { getUserId } from "@/lib/user";
 
 export async function GetPeriods() {
   const years = await prisma.workflowExecution.aggregate({
-    where: { userId: DEFAULT_USER_ID },
+    where: { userId: await getUserId() },
     _min: { startedAt: true },
   });
   const currentYear = new Date().getFullYear();

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { DEFAULT_USER_ID } from "@/lib/user";
+import { getUserId } from "@/lib/user";
 import { FileQuestion } from "lucide-react";
 import React from "react";
 import Editor from "../../_components/Editor";
@@ -10,7 +10,7 @@ async function page({ params }: { params: { workflowId: string } }) {
   const workflow = await prisma.workflow.findUnique({
     where: {
       id: workflowId,
-      userId: DEFAULT_USER_ID,
+      userId: await getUserId(),
     },
   });
   if (!workflow) {

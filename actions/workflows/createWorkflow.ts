@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from "@/lib/prisma";
-import { DEFAULT_USER_ID } from "@/lib/user";
+import { getUserId } from "@/lib/user";
 import { createWorkflowSchema, createWorkflowSchemaType } from "@/schema/workflow";
 import { WorkflowStatus } from "@/types/workflow";
 import { AppNode } from "@/types/appNode";
@@ -23,7 +23,7 @@ export async function CreateWorkflow(form: createWorkflowSchemaType) {
     try {
         const result = await prisma.workflow.create({
             data: {
-                userId: DEFAULT_USER_ID,
+                userId: await getUserId(),
                 status: WorkflowStatus.DRAFT,
                 definition: JSON.stringify(initialFlow),
                 ...data,

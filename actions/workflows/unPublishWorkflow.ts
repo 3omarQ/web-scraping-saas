@@ -2,14 +2,16 @@
 
 import { prisma } from "@/lib/prisma";
 import { WorkflowStatus } from "@/types/workflow";
-import { DEFAULT_USER_ID } from "@/lib/user";
+import { getUserId } from "@/lib/user";
 import { revalidatePath } from "next/cache";
 
 export async function UnPublishWorkflow({ id }: { id: string }) {
+  const userId = await getUserId();
+
   const workflow = await prisma.workflow.findUnique({
     where: {
       id,
-      userId: DEFAULT_USER_ID,
+      userId,
     },
   });
 
@@ -24,7 +26,7 @@ export async function UnPublishWorkflow({ id }: { id: string }) {
   await prisma.workflow.update({
     where: {
       id,
-      userId: DEFAULT_USER_ID,
+      userId,
     },
     data: {
       executionPlan: null,

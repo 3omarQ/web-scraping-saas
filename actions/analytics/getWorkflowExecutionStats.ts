@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { WorkflowExecutionStatus } from "@/types/workflow";
-import { DEFAULT_USER_ID } from "@/lib/user";
+import { getUserId } from "@/lib/user";
 import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns";
 
 export async function GetWorkflowExecutionStats(period: {
@@ -16,7 +16,7 @@ export async function GetWorkflowExecutionStats(period: {
   const dateRange = { startDate, endDate };
   const executions = await prisma.workflowExecution.findMany({
     where: {
-      userId: DEFAULT_USER_ID,
+      userId: await getUserId(),
       startedAt: {
         gte: dateRange.startDate,
         lte: dateRange.endDate,

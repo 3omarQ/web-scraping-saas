@@ -2,13 +2,14 @@
 
 import { unstable_noStore as noStore } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { DEFAULT_USER_ID } from "@/lib/user";
+import { getUserId } from "@/lib/user";
 
 export async function GetWorkflowsForUser(){
     noStore();
+    const userId = await getUserId();
     return prisma.workflow.findMany({
         where:{
-            userId: DEFAULT_USER_ID,
+            userId,
         },
         orderBy:{
             createdAt:"asc"
