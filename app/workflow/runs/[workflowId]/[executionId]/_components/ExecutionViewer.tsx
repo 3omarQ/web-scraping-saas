@@ -19,6 +19,7 @@ import {
   CircleDashedIcon,
   ClockIcon,
   Divide,
+  Loader2Icon,
   LucideIcon,
   WorkflowIcon,
 } from "lucide-react";
@@ -37,27 +38,33 @@ function ExecutionViewer({ initialData }: { initialData: ExecutionData }) {
     initialData,
     queryFn: () => GetWorkflowExecutionWithPhases(initialData!.id),
     refetchInterval: (q) =>
-      q.state.data?.status === WorkflowExecutionStatus.RUNNING ? 1000 : false,
+      q.state.data?.status === WorkflowExecutionStatus.RUNNING ||
+      q.state.data?.status === WorkflowExecutionStatus.PENDING
+        ? 1000
+        : false,
   });
 
+  const isPending = query.data?.status === WorkflowExecutionStatus.PENDING;
   const isRunning = query.data?.status === WorkflowExecutionStatus.RUNNING;
 
   useEffect(() => {
-    //while isRunnning we select it
+    if (isPending) {
+      setSelectedPhase(null);
+      return;
+    }
     if (isRunning) {
       let phaseToSelect = query.data?.executionPhases.toSorted((a, b) =>
         a.startedAt! > b.startedAt! ? -1 : 1
       )[0];
       setSelectedPhase(phaseToSelect?.id);
       return;
-    } else {
-      let phaseToSelect = query.data?.executionPhases.toSorted((a, b) =>
-        a.completedAt! > b.completedAt! ? -1 : 1
-      )[0];
-      setSelectedPhase(phaseToSelect?.id);
-      return;
     }
-  }, [query.data?.executionPhases, isRunning, setSelectedPhase]);
+    // finished or failed — select the most recently completed phase
+    let phaseToSelect = query.data?.executionPhases.toSorted((a, b) =>
+      a.completedAt! > b.completedAt! ? -1 : 1
+    )[0];
+    setSelectedPhase(phaseToSelect?.id);
+  }, [query.data?.executionPhases, isPending, isRunning, setSelectedPhase]);
 
   const phaseDetails = useQuery({
     queryKey: ["phaseDetails", selectedPhase, query.data?.status],
@@ -115,7 +122,7 @@ function ExecutionViewer({ initialData }: { initialData: ExecutionData }) {
               className="w-full justify-between"
               variant={selectedPhase === phase.id ? "secondary" : "ghost"}
               onClick={() => {
-                if (isRunning) {
+                if (isRunning || isPending) {
                   return;
                 }
                 setSelectedPhase(phase.id);
@@ -131,13 +138,26 @@ function ExecutionViewer({ initialData }: { initialData: ExecutionData }) {
         </div>
       </aside>
       <div className="flex w-full h-full">
-        {isRunning && (
+        {isPending && (
           <div className="flex items-center flex-col gap-2 justify-center h-full w-full">
-            <p className="font-bold">Run is in progress.. Please wait.</p>
+            <Loader2Icon className="h-10 w-10 animate-spin stroke-primary" />
+            <p className="font-bold text-lg">Starting workflow execution...</p>
+            <p className="text-sm text-muted-foreground">
+              Initializing browser and preparing phases
+            </p>
           </div>
         )}
-        {!isRunning && !selectedPhase && (
-          <div className="flex items-center flex-cold gap-2 justify-center h-full w-full">
+        {!isPending && isRunning && (
+          <div className="flex items-center flex-col gap-2 justify-center h-full w-full">
+            <Loader2Icon className="h-10 w-10 animate-spin stroke-primary" />
+            <p className="font-bold text-lg">Workflow is running...</p>
+            <p className="text-sm text-muted-foreground">
+              Select a phase in the sidebar to view live logs
+            </p>
+          </div>
+        )}
+        {!isPending && !isRunning && !selectedPhase && (
+          <div className="flex items-center flex-col gap-2 justify-center h-full w-full">
             <div className="flex flex-col gap-1 text-center">
               <p className="font-bold">No phase selected</p>
               <p className="text-sm text-muted-foreground">
@@ -146,7 +166,7 @@ function ExecutionViewer({ initialData }: { initialData: ExecutionData }) {
             </div>
           </div>
         )}
-        {!isRunning && selectedPhase && phaseDetails.data && (
+        {!isPending && !isRunning && selectedPhase && phaseDetails.data && (
           <div className="flex flex-col py-4 container gap-4 overflow-auto">
             <div className="flex gap-2 items-center">
               <Badge variant={"outline"} className="space-x-4">

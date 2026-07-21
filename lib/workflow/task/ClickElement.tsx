@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 export const ClickElement = {
-  type: TaskType.FILL_INPUT,
+  type: TaskType.CLICK_ELEMENT,
   label: "Click element",
   icon: (props: LucideProps) => (
     <MousePointerClick
