@@ -20,16 +20,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, PlusIcon } from "lucide-react";
 
 function WorkflowFormDialog({
   triggerText = "Create Workflow",
+  triggerClassName,
   title = "Create Workflow",
   defaultValues = { name: "", description: "" },
   onSubmit,
   isPending = false,
 }: {
   triggerText?: string;
+  triggerClassName?: string;
   title?: string;
   defaultValues?: Partial<createWorkflowSchemaType>;
   onSubmit: (data: createWorkflowSchemaType) => void;
@@ -46,7 +48,16 @@ function WorkflowFormDialog({
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>{triggerText ?? "Create workflow"}</Button>
+          <Button className={triggerClassName}>
+            {triggerText ? (
+              triggerText
+            ) : (
+              <>
+                <PlusIcon className="w-5 h-5" />
+                <span className="text-sm font-medium">+ create</span>
+              </>
+            )}
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <div className="flex flex-col gap-4">

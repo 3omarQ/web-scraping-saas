@@ -34,8 +34,8 @@ export default function UserWorkflowsClient({
       });
       router.push(`/workflow/editor/${result.id}`);
     },
-    onError: () => {
-      toast.error("Error creating workflow", { id: "create-workflow" });
+    onError: (error) => {
+      toast.error(error?.message || "Error creating workflow", { id: "create-workflow" });
     },
   });
 

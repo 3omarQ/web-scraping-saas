@@ -53,8 +53,8 @@ function ExecutionsTable({
         old ? old.filter((e) => e.id !== deletedId) : []
       );
     },
-    onError: () => {
-      toast.error("Error deleting execution", { id: "delete-Execution" });
+    onError: (error) => {
+      toast.error(error?.message || "Error deleting execution", { id: "delete-Execution" });
     },
   });
 

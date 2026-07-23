@@ -9,7 +9,7 @@ export async function LaunchBrowserExecutor(
 
   try {
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       executablePath:
         process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
     });

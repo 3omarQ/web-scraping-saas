@@ -22,8 +22,8 @@ function ShareButton({ workflowId }: { workflowId: string }) {
       setModalOpen(true);
     },
 
-    onError: () =>
-      toast.error("Something went wrong while sharing the workflow", {
+    onError: (error) =>
+      toast.error(error?.message || "Something went wrong while sharing the workflow", {
         id: workflowId,
       }),
   });

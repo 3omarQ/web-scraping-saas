@@ -22,8 +22,8 @@ function SaveAsButton() {
       toast.success("Cloned workflow", { id: "clone-workflow" });
       setOpen(false);
     },
-    onError: () => {
-      toast.error("Failed to clone workflow", { id: "clone-workflow" });
+    onError: (error) => {
+      toast.error(error?.message || "Failed to clone workflow", { id: "clone-workflow" });
     },
   });
 

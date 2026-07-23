@@ -17,8 +17,8 @@ function PublishButton({ workflowId }: { workflowId: string }) {
     mutationFn: PublishWorkflow,
     onSuccess: () =>
       toast.success("Workflow published successfully", { id: workflowId }),
-    onError: () =>
-      toast.error("Something went wrong while publishing the workflow", {
+    onError: (error) =>
+      toast.error(error?.message || "Something went wrong while publishing the workflow", {
         id: workflowId,
       }),
   });

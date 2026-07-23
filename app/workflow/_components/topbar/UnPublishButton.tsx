@@ -15,8 +15,8 @@ function UnPublishButton({ workflowId }: { workflowId: string }) {
     mutationFn: UnPublishWorkflow,
     onSuccess: () =>
       toast.success("Workflow Unpublished successfully", { id: workflowId }),
-    onError: () =>
-      toast.error("Something went wrong while unpublishing the workflow", {
+    onError: (error) =>
+      toast.error(error?.message || "Something went wrong while unpublishing the workflow", {
         id: workflowId,
       }),
   });

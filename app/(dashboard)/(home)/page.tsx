@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { GetStatsCardsValues } from "@/actions/analytics/getStatsCardsValues";
 import { CirclePlayIcon, WaypointsIcon } from "lucide-react";
 import StatsCard from "./_components/StatsCard";
+import CreateWorkflowButton from "./_components/CreateWorkflowButton";
 import StatsExecutionStatus from "./_components/StatsExecutionStatus";
 
 function HomePage({
@@ -59,17 +60,20 @@ async function StatsCards({
 }) {
   const data = await GetStatsCardsValues(selectedPeriod);
   return (
-    <div className="grid gap-3 lg:grid-cols-2">
+    <div className="grid gap-3 grid-cols-1 lg:grid-cols-3">
       <StatsCard
         title="Workflow executions"
         value={data.workflowExecutions}
         icon={CirclePlayIcon}
-      ></StatsCard>
+      />
       <StatsCard
         title="Phase executions"
         value={data.phaseExecutions}
         icon={WaypointsIcon}
-      ></StatsCard>
+      />
+      <div className="flex items-center justify-center h-full">
+        <CreateWorkflowButton />
+      </div>
     </div>
   );
 }

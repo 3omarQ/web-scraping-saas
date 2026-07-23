@@ -10,8 +10,8 @@ function RunBtn({ workflowId }: { workflowId: string }) {
     mutationFn: RunWorkflow,
     onSuccess: () =>
       toast.success("Workflow ran successfully", { id: workflowId }),
-    onError: () =>
-      toast.error("Something went wrong while running the workflow", {
+    onError: (error) =>
+      toast.error(error?.message || "Something went wrong while running the workflow", {
         id: workflowId,
       }),
   });

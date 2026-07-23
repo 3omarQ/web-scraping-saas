@@ -14,8 +14,8 @@ function ExecuteButton({ workflowId }: { workflowId: string }) {
   const saveMutation = useMutation({
     mutationFn: RunWorkflow,
     onSuccess: () => toast.success("Workflow executed successfully"),
-    onError: () =>
-      toast.error("Something went wrong while executing the workflow"),
+    onError: (error) =>
+      toast.error(error?.message || "Something went wrong while executing the workflow"),
   });
   return (
     <div>

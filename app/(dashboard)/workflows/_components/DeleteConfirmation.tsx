@@ -17,8 +17,8 @@ function DeleteConfirmation({open,setOpen,workflowId}:Props) {
             onSuccess: ()=>{
                 toast.success("Workflow deleted",{ id: "delete-workflow"})
             },
-            onError: ()=>{
-                toast.error("Error deleting workflow", {id:"delete-workflow"})
+            onError: (error)=>{
+                toast.error(error?.message || "Error deleting workflow", {id:"delete-workflow"})
             }
         }
     );
